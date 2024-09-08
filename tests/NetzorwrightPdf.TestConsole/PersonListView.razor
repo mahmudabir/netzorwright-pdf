@@ -2,7 +2,7 @@
 
 @if (People == null || People.Count == 0)
 {
-    <h1> No Data!!!</h1>
+    <h1>No Data!!!</h1>
 }
 else
 {
@@ -17,8 +17,9 @@ else
 }
 
 
-   @code{
-       [Parameter]
-       public List<Person>? People { get; set; }
-   }
+@code
+{
+    [Parameter]
+    public List<Person>? People { get; set; }
+}
 
