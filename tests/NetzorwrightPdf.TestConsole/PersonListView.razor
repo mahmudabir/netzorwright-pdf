@@ -1,0 +1,24 @@
+@using NetzorwrightPdf.TestConsole
+
+@if (People == null || People.Count == 0)
+{
+    <h1> No Data!!!</h1>
+}
+else
+{
+    <ul>
+
+        @foreach (var person in People)
+        {
+            <li>@person.Name - @person.Age - @person.Gender</li>
+        }
+
+    </ul>
+}
+
+
+   @code{
+       [Parameter]
+       public List<Person>? People { get; set; }
+   }
+
