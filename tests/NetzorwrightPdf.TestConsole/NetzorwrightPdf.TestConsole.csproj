@@ -19,4 +19,19 @@
     <ProjectReference Include="..\..\src\NetzorwrightPdf\NetzorwrightPdf.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Blazor-DinkToPdf\" />
+    <Folder Include="Blazor-Playwright\" />
+    <Folder Include="Razor-DinkToPdf\" />
+    <Folder Include="Razor-Playwright\" />
+  </ItemGroup>
+
+    <!--<ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.8" />
+        <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Playwright" Version="1.47.0" />
+    </ItemGroup>-->
+
 </Project>

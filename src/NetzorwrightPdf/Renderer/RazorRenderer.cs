@@ -1,12 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
@@ -29,11 +29,11 @@ public class RazorRenderer
 
         var httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };
 
-        var actionContext = new Microsoft.AspNetCore.Mvc.ActionContext
+        var actionContext = new ActionContext
         {
             HttpContext = httpContext,
-            RouteData = new Microsoft.AspNetCore.Routing.RouteData(),
-            ActionDescriptor = new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor()
+            RouteData = new RouteData(),
+            ActionDescriptor = new ActionDescriptor()
         };
 
         var razorView = razorViewEngine.FindView(actionContext, viewName, false);
@@ -47,7 +47,7 @@ public class RazorRenderer
         {
             using var sw = new StringWriter();
 
-            var viewContext = new Microsoft.AspNetCore.Mvc.Rendering.ViewContext(
+            var viewContext = new ViewContext(
                 actionContext,
                 razorView.View,
                 new ViewDataDictionary<TModel>(

@@ -1,5 +1,8 @@
 ﻿using System.Diagnostics;
 
+using DinkToPdf;
+using DinkToPdf.Contracts;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Playwright;
 
+using NetzorwrightPdf.PdfGenerator;
 using NetzorwrightPdf.Renderer;
 
 namespace NetzorwrightPdf;
@@ -25,16 +29,22 @@ public static class Netzorwright
     public static BlazorRenderer BlazorRenderer { get; set; }
     public static RazorRenderer RazorRenderer { get; set; }
 
+    public static PlaywrightGenerator PlaywrightGenerator { get; set; }
+    public static DinkToPdfGenerator DinkToPdfGenerator { get; set; }
+
     public static void Initialize(bool isHeadless = true)
     {
         var serviceProvider = BuildServiceProvider();
 
-        RazorRenderer = new RazorRenderer(serviceProvider);
-        BlazorRenderer = new BlazorRenderer(serviceProvider);
-
         _isHeadless = isHeadless;
         DefaultPagePdfOptions = _defaultPagePdfOptions;
         DefaultBrowserTypeLaunchOptions = new BrowserTypeLaunchOptions { Headless = _isHeadless };
+
+        RazorRenderer = new RazorRenderer(serviceProvider);
+        BlazorRenderer = new BlazorRenderer(serviceProvider);
+
+        PlaywrightGenerator = new PlaywrightGenerator(serviceProvider, isHeadless, DefaultPagePdfOptions, DefaultBrowserTypeLaunchOptions);
+        DinkToPdfGenerator = new DinkToPdfGenerator(serviceProvider);
 
         //Task.Run(() => Microsoft.Playwright.Program.Main(["install"]));
         Microsoft.Playwright.Program.Main(["install"]);
@@ -44,6 +54,7 @@ public static class Netzorwright
     {
         IServiceCollection services = new ServiceCollection();
 
+        #region Razor & Blazor
         // Set up configuration
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -60,7 +71,9 @@ public static class Netzorwright
 #endif
 
         // Set up the file provider
-        var fileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), rootPath));
+        var path = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), rootPath));
+        Directory.SetCurrentDirectory(path.Root);
+        var fileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()));
 
         // Add necessary services
         var hostingEnvironment = new HostingEnvironment
@@ -115,6 +128,14 @@ public static class Netzorwright
 
         // Add file provider
         services.AddSingleton<IFileProvider>(fileProvider);
+        #endregion Razor & Blazor
+
+        #region DinkToPdf
+
+        services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+
+        #endregion DinkToPdf
+
 
         return services.BuildServiceProvider();
     }
@@ -122,54 +143,14 @@ public static class Netzorwright
     public static void IsHeadless()
     {
         _isHeadless = true;
+        PlaywrightGenerator.IsHeadless();
     }
 
     public static void NotHeadless()
     {
         _isHeadless = false;
+        PlaywrightGenerator.NotHeadless();
     }
 
-    public static void PdfFilePath(string filePath)
-    {
-        _filePath = filePath;
-    }
 
-    public static async Task<bool> GeneratePdfAsync(string htmlString, PagePdfOptions? pagePdfOptions = null, BrowserTypeLaunchOptions? browserTypeLaunchOptions = null)
-    {
-        try
-        {
-            var playwright = await Playwright.CreateAsync();
-
-            if (browserTypeLaunchOptions == null)
-            {
-                browserTypeLaunchOptions = new BrowserTypeLaunchOptions()
-                {
-                    Headless = _isHeadless
-                };
-            }
-
-            var browser = await playwright.Chromium.LaunchAsync(browserTypeLaunchOptions);
-
-            var page = await browser.NewPageAsync();
-            await page.SetContentAsync(htmlString ?? string.Empty);
-
-            pagePdfOptions = pagePdfOptions ?? _defaultPagePdfOptions;
-
-            pagePdfOptions.Path = _filePath ?? pagePdfOptions.Path ?? "./netzowright.pdf";
-
-            await page.PdfAsync(pagePdfOptions);
-
-            await page.CloseAsync();
-
-            playwright.Dispose();
-
-            _filePath = null;
-        }
-        catch (Exception ex)
-        {
-            return false;
-        }
-
-        return true;
-    }
 }

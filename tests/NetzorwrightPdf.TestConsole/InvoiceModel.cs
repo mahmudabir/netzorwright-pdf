@@ -2,6 +2,7 @@
 
 public class InvoiceViewModel
 {
+    public string ShopLogo { get; set; }
     public string ShopName { get; set; }
     public string ShopAddress { get; set; }
     public string ShopEmail { get; set; }

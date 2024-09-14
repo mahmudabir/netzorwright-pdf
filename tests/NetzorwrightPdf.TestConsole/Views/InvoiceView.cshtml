@@ -1,4 +1,4 @@
-@using NetzorwrightPdf.TestConsole
+@* @using NetzorwrightPdf.TestConsole *@
 @using System.Globalization
 
 @* @model InvoiceViewModel *@
@@ -124,7 +124,8 @@
     <div class="invoice-box">
         <div class="invoice-header">
             <h1>Invoice</h1>
-            <img src="@Url.Content("https://tassistant.vercel.app/assets/layout/images/logo2x.png")" alt="Shop Logo">
+            @* <img src="@Url.Content("https://tassistant.vercel.app/assets/layout/images/logo2x.png")" alt="Shop Logo"> *@
+            <img src="data:image/png;base64,@(Model.ShopLogo)" alt="Shop Logo">
         </div>
 
         <div class="invoice-info">

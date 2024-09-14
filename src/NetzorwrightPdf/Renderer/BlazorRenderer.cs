@@ -18,7 +18,7 @@ public class BlazorRenderer
         _htmlRenderer = new HtmlRenderer(serviceProvider, loggerFactory);
     }
 
-    public async Task<string> GenerateHtmlAsync(IDictionary<string, object?> keyValues, Type componentType)
+    public async Task<string> RenderViewToStringAsync(IDictionary<string, object?> keyValues, Type componentType)
     {
         var htmlString = await _htmlRenderer.Dispatcher.InvokeAsync(async () =>
         {
