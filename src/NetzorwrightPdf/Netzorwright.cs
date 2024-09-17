@@ -41,7 +41,7 @@ public static class Netzorwright
         DefaultBrowserTypeLaunchOptions = new BrowserTypeLaunchOptions { Headless = _isHeadless };
 
         RazorRenderer = new RazorRenderer(serviceProvider);
-        BlazorRenderer = new BlazorRenderer(serviceProvider);
+        BlazorRenderer = new BlazorRenderer(serviceProvider); //Can be optimized like: Razor.Templating.Core
 
         PlaywrightGenerator = new PlaywrightGenerator(serviceProvider, isHeadless, DefaultPagePdfOptions, DefaultBrowserTypeLaunchOptions);
         DinkToPdfGenerator = new DinkToPdfGenerator(serviceProvider);
