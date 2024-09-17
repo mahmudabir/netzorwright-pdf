@@ -21,7 +21,7 @@ public class RazorRenderer
         _serviceProvider = serviceProvider;
     }
 
-    public async Task<string> RenderViewToStringAsync<TModel>(string viewName, TModel model)
+    public async Task<string> RenderViewToStringAsync<TModel>(string viewName, TModel model, IDictionary<string, object?>? viewData = null)
     {
         using var scope = _serviceProvider.CreateScope();
         var razorViewEngine = scope.ServiceProvider.GetRequiredService<IRazorViewEngine>();
@@ -45,26 +45,38 @@ public class RazorRenderer
         }
         else
         {
-            using var sw = new StringWriter();
-
-            var viewContext = new ViewContext(
-                actionContext,
-                razorView.View,
-                new ViewDataDictionary<TModel>(
-                    metadataProvider: new EmptyModelMetadataProvider(),
-                    modelState: new ModelStateDictionary())
+            using (var writer = new StringWriter())
+            {
+                var viewDataDictionary = new ViewDataDictionary<TModel>(metadataProvider: new EmptyModelMetadataProvider(), modelState: new ModelStateDictionary())
                 {
                     Model = model
-                },
-                new TempDataDictionary(
-                    actionContext.HttpContext,
-                    _serviceProvider.GetRequiredService<ITempDataProvider>()),
-                sw,
-                new HtmlHelperOptions()
-            );
+                };
 
-            await razorView.View.RenderAsync(viewContext);
-            return sw.ToString();
+                if (viewData != null)
+                {
+                    foreach (var item in viewData)
+                    {
+                        viewDataDictionary.Add(item.Key, item.Value);
+                    }
+                }
+
+                var tempDataProvider = _serviceProvider.GetRequiredService<ITempDataProvider>();
+                var tempData = new TempDataDictionary(actionContext.HttpContext, tempDataProvider);
+
+                var htmlHelperOptions = new HtmlHelperOptions();
+
+                var viewContext = new ViewContext(
+                    actionContext,
+                    razorView.View,
+                    viewDataDictionary,
+                    tempData,
+                    writer,
+                    htmlHelperOptions
+                );
+
+                await razorView.View.RenderAsync(viewContext);
+                return writer.ToString();
+            }
         }
     }
 }

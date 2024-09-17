@@ -18,7 +18,7 @@ try
 
     if (response.IsSuccessStatusCode)
     {
-        using var responseStream =await  response.Content.ReadAsStreamAsync();
+        using var responseStream = await response.Content.ReadAsStreamAsync();
         var logoBytes = new byte[responseStream.Length];
         await responseStream.ReadAsync(logoBytes, 0, (int)responseStream.Length);
 
@@ -73,12 +73,10 @@ catch (Exception ex)
     };
 
     Directory.CreateDirectory("Razor-DinkToPdf");
-    var data = new Dictionary<string, object?> { { "Invoice", invoiceViewModel } };
     Netzorwright.DinkToPdfGenerator.PdfFilePath("Razor-DinkToPdf\\person-list-with-data-1.pdf");
     var isSuccess1 = await Netzorwright.DinkToPdfGenerator.GeneratePdfAsync(await Netzorwright.RazorRenderer.RenderViewToStringAsync("InvoiceView", invoiceViewModel));
 
     items.Clear();
-    data = new Dictionary<string, object?> { { "Invoice", invoiceViewModel } };
     Netzorwright.DinkToPdfGenerator.PdfFilePath("Razor-DinkToPdf\\person-list-without-data-1.pdf");
     var isSuccess2 = await Netzorwright.DinkToPdfGenerator.GeneratePdfAsync(await Netzorwright.RazorRenderer.RenderViewToStringAsync("InvoiceView", invoiceViewModel));
 }
@@ -122,7 +120,6 @@ catch (Exception ex)
     Directory.CreateDirectory("Razor-DinkToPdf");
 
     Stopwatch sw = Stopwatch.StartNew();
-    var data = new Dictionary<string, object?> { { "Invoice", invoiceViewModel } };
     Netzorwright.DinkToPdfGenerator.PdfFilePath("Razor-DinkToPdf\\person-list-with-data.pdf");
     var isSuccess1 = await Netzorwright.DinkToPdfGenerator.GeneratePdfAsync(await Netzorwright.RazorRenderer.RenderViewToStringAsync("InvoiceView", invoiceViewModel));
     Console.WriteLine((isSuccess1 ? "Success" : "Failed") + ": Razor-DinkToPdf\\person-list-with-data.pdf");
@@ -132,9 +129,9 @@ catch (Exception ex)
 
     sw = Stopwatch.StartNew();
     items.Clear();
-    data = new Dictionary<string, object?> { { "Invoice", invoiceViewModel } };
     Netzorwright.DinkToPdfGenerator.PdfFilePath("Razor-DinkToPdf\\person-list-without-data.pdf");
-    var isSuccess2 = await Netzorwright.DinkToPdfGenerator.GeneratePdfAsync(await Netzorwright.RazorRenderer.RenderViewToStringAsync("InvoiceView", invoiceViewModel));
+    var viewData = new Dictionary<string, object> { { "Name", "Abir Mahmud" } };
+    var isSuccess2 = await Netzorwright.DinkToPdfGenerator.GeneratePdfAsync(await Netzorwright.RazorRenderer.RenderViewToStringAsync("InvoiceView", invoiceViewModel, viewData));
     Console.WriteLine((isSuccess2 ? "Success" : "Failed") + ": Razor-DinkToPdf\\person-list-without-data.pdf");
     sw.Stop();
     Console.WriteLine(sw.ElapsedMilliseconds + "ms");
@@ -180,7 +177,6 @@ catch (Exception ex)
     Directory.CreateDirectory("Razor-Playwright");
 
     Stopwatch sw = Stopwatch.StartNew();
-    var data = new Dictionary<string, object?> { { "Invoice", invoiceViewModel } };
     Netzorwright.PlaywrightGenerator.PdfFilePath("Razor-Playwright\\person-list-with-data.pdf");
     var isSuccess1 = await Netzorwright.PlaywrightGenerator.GeneratePdfAsync(await Netzorwright.RazorRenderer.RenderViewToStringAsync("InvoiceView", invoiceViewModel), null, null);
     Console.WriteLine((isSuccess1 ? "Success" : "Failed") + ": Razor-Playwright\\person-list-with-data.pdf");
@@ -190,7 +186,6 @@ catch (Exception ex)
 
     sw = Stopwatch.StartNew();
     items.Clear();
-    data = new Dictionary<string, object?> { { "Invoice", invoiceViewModel } };
     Netzorwright.PlaywrightGenerator.PdfFilePath("Razor-Playwright\\person-list-without-data.pdf");
     var isSuccess2 = await Netzorwright.PlaywrightGenerator.GeneratePdfAsync(await Netzorwright.RazorRenderer.RenderViewToStringAsync("InvoiceView", invoiceViewModel), null, null);
     Console.WriteLine((isSuccess2 ? "Success" : "Failed") + ": Razor-Playwright\\person-list-without-data.pdf");
