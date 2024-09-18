@@ -32,9 +32,9 @@ public static class Netzorwright
     public static PlaywrightGenerator PlaywrightGenerator { get; set; }
     public static DinkToPdfGenerator DinkToPdfGenerator { get; set; }
 
-    public static void Initialize(bool isHeadless = true)
+    public static void Initialize(bool isHeadless = true, string currentDirectory = null)
     {
-        var serviceProvider = BuildServiceProvider();
+        var serviceProvider = BuildServiceProvider(currentDirectory);
 
         _isHeadless = isHeadless;
         DefaultPagePdfOptions = _defaultPagePdfOptions;
@@ -50,7 +50,7 @@ public static class Netzorwright
         Microsoft.Playwright.Program.Main(["install"]);
     }
 
-    public static IServiceProvider BuildServiceProvider()
+    public static IServiceProvider BuildServiceProvider(string currentDirectory = null)
     {
         IServiceCollection services = new ServiceCollection();
 
@@ -70,10 +70,22 @@ public static class Netzorwright
         string environmentName = Environments.Production;
 #endif
 
+        PhysicalFileProvider fileProvider;
+        if (currentDirectory == null)
+        {
+            var path = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), rootPath));
+            //Directory.SetCurrentDirectory(path.Root);
+            fileProvider = new PhysicalFileProvider(Path.Combine(path.Root));
+        }
+        else
+        {
+            var path = new PhysicalFileProvider(Path.Combine(currentDirectory));
+            //Directory.SetCurrentDirectory(path.Root);
+            fileProvider = new PhysicalFileProvider(Path.Combine(path.Root));
+        }
+
         // Set up the file provider
-        var path = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), rootPath));
-        Directory.SetCurrentDirectory(path.Root);
-        var fileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory()));
+
 
         // Add necessary services
         var hostingEnvironment = new HostingEnvironment

@@ -2,6 +2,7 @@
 using DinkToPdf.Contracts;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 
 namespace NetzorwrightPdf.PdfGenerator;
 public class DinkToPdfGenerator
@@ -23,8 +24,10 @@ public class DinkToPdfGenerator
     {
         try
         {
-            _filePath = _filePath ?? "./netzowright.pdf";
-            var fullpath = Path.Combine(Directory.GetCurrentDirectory(), _filePath);
+            var fileProvider = _serviceProvider.GetRequiredService<IFileProvider>() as PhysicalFileProvider;
+            _filePath = Path.Combine(fileProvider.Root, (_filePath ?? "./netzowright.pdf"));
+            var fullPath = _filePath;
+            CreateUnavailableDirectory(fullPath);
 
             var doc = new HtmlToPdfDocument()
             {
@@ -34,7 +37,7 @@ public class DinkToPdfGenerator
                     Orientation = Orientation.Portrait,
                     PaperSize = PaperKind.A4,
                     Margins = new MarginSettings() { Top = 10 },
-                    Out = fullpath,
+                    Out = fullPath,
                 },
                 Objects =
                 {
@@ -60,6 +63,18 @@ public class DinkToPdfGenerator
         }
 
         return true;
+    }
+
+    public async void CreateUnavailableDirectory(string fullPath)
+    {
+        // Extract the directory path from the file path
+        string directoryPath = Path.GetDirectoryName(fullPath);
+
+        // Ensure the directory exists, create if it does not
+        if (!Directory.Exists(directoryPath))
+        {
+            Directory.CreateDirectory(directoryPath);
+        }
     }
 
 }
