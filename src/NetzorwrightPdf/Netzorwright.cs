@@ -70,6 +70,7 @@ public static class Netzorwright
         string environmentName = Environments.Production;
 #endif
 
+        // Set up the file provider
         PhysicalFileProvider fileProvider;
         if (currentDirectory == null)
         {
@@ -83,9 +84,6 @@ public static class Netzorwright
             //Directory.SetCurrentDirectory(path.Root);
             fileProvider = new PhysicalFileProvider(Path.Combine(path.Root));
         }
-
-        // Set up the file provider
-
 
         // Add necessary services
         var hostingEnvironment = new HostingEnvironment
