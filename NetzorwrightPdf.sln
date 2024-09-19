@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetzorwrightPdf.WebApi", "NetzorwrightPdf.WebApi\NetzorwrightPdf.WebApi.csproj", "{74A4017C-4DD5-4B5E-AC4F-5F997F6531A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{C4C3D608-D303-44D7-8F04-8EAE877407DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4C3D608-D303-44D7-8F04-8EAE877407DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4C3D608-D303-44D7-8F04-8EAE877407DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74A4017C-4DD5-4B5E-AC4F-5F997F6531A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74A4017C-4DD5-4B5E-AC4F-5F997F6531A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74A4017C-4DD5-4B5E-AC4F-5F997F6531A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74A4017C-4DD5-4B5E-AC4F-5F997F6531A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,5 +44,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{DD487F4D-0FD3-4E52-A81E-8C0B863A0BCE} = {607DCB0A-E6C1-4124-BB15-BCF93B1F6824}
 		{C4C3D608-D303-44D7-8F04-8EAE877407DD} = {14ABE4A2-B4E4-485F-A19A-2DC61B2C20A6}
+		{74A4017C-4DD5-4B5E-AC4F-5F997F6531A8} = {14ABE4A2-B4E4-485F-A19A-2DC61B2C20A6}
 	EndGlobalSection
 EndGlobal

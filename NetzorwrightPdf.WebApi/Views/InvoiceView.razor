@@ -1,0 +1,194 @@
+@using NetzorwrightPdf.WebApi
+@using System.Globalization
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - @Invoice.InvoiceNumber</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+
+        .invoice-box {
+            width: 100%;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            border: 1px solid #eee;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .invoice-header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .invoice-header img {
+            max-width: 150px;
+        }
+
+        .invoice-info {
+            margin-top: 20px;
+        }
+
+        .invoice-info h2 {
+            margin-bottom: 0;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .invoice-info p {
+            margin: 0;
+            color: #777;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #eee;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        td {
+            text-align: left;
+        }
+
+        .totals {
+            margin-top: 20px;
+        }
+
+        .totals .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        .totals .total-row span {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .totals .total-row .amount {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .thank-you {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 16px;
+            color: #555;
+        }
+
+@*         @media print {
+            body {
+                background-color: white;
+            }
+            .invoice-box {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                border: none;
+            }
+        } *@
+    </style>
+</head>
+<body>
+    <div class="invoice-box">
+        <div class="invoice-header">
+            <h1>Invoice</h1>
+            @* <img src="https://tassistant.vercel.app/assets/layout/images/logo2x.png" alt="Shop Logo"> *@
+            <img src="data:image/png;base64,@Invoice.ShopLogo" alt="Shop Logo">
+        </div>
+
+        <div class="invoice-info">
+            <h2>@Invoice.ShopName</h2>
+            <p>@Invoice.ShopAddress</p>
+            <p>Email: @Invoice.ShopEmail | Phone: @Invoice.ShopPhone</p>
+            <p>Invoice Date: <strong>@Invoice.InvoiceDate.ToString("dd/MM/yyyy")</strong></p>
+            <p>Invoice #: <strong>@Invoice.InvoiceNumber</strong></p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Item Description</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < (Invoice.Items?.Count ?? 0); i++)
+                {
+                    <tr>
+                        <td>@(i + 1)</td>
+                        <td>@Invoice.Items[i].Description</td>
+                        <td>@Invoice.Items[i].Quantity</td>
+                        <td>@Invoice.Items[i].UnitPrice.ToString("C")</td>
+                        <td>@{(Invoice.Items[i].Quantity * Invoice.Items[i].UnitPrice).ToString("C", new CultureInfo("bn-BD"));}</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="totals">
+            <div class="total-row">
+                <span>Subtotal:</span>
+                <span class="amount">@Invoice.Subtotal.ToString("C", new CultureInfo("bn-BD"))</span>
+            </div>
+            <div class="total-row">
+                <span>Tax (@Invoice.TaxRate * 100)%:</span>
+                <span class="amount">@Invoice.TaxAmount.ToString("C", new CultureInfo("bn-BD"))</span>
+            </div>
+            <div class="total-row">
+                <span>Total:</span>
+                <span class="amount">@Invoice.Total.ToString("C", new CultureInfo("bn-BD"))</span>
+            </div>
+        </div>
+
+        <div class="thank-you">
+            <p>Thank you for your business!</p>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+@code
+{
+    [Parameter]
+    public InvoiceViewModel Invoice { get; set; }
+
+    protected override void OnInitialized()
+    {
+
+    }
+}
+

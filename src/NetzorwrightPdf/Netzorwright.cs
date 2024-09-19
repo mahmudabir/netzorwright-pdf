@@ -32,9 +32,9 @@ public static class Netzorwright
     public static PlaywrightGenerator PlaywrightGenerator { get; set; }
     public static DinkToPdfGenerator DinkToPdfGenerator { get; set; }
 
-    public static void Initialize(bool isHeadless = true, string currentDirectory = null)
+    public static void Initialize<T>(bool isHeadless = true, string currentDirectory = null)
     {
-        var serviceProvider = BuildServiceProvider(currentDirectory);
+        var serviceProvider = BuildServiceProvider<T>(currentDirectory);
 
         _isHeadless = isHeadless;
         DefaultPagePdfOptions = _defaultPagePdfOptions;
@@ -50,7 +50,7 @@ public static class Netzorwright
         Microsoft.Playwright.Program.Main(["install"]);
     }
 
-    public static IServiceProvider BuildServiceProvider(string currentDirectory = null)
+    public static IServiceProvider BuildServiceProvider<T>(string currentDirectory = null)
     {
         IServiceCollection services = new ServiceCollection();
 
@@ -63,10 +63,8 @@ public static class Netzorwright
         services.AddSingleton<IConfiguration>(configuration);
 
 #if DEBUG
-        string rootPath = "..\\..\\..\\";
         string environmentName = Environments.Development;
 #else
-        string rootPath = "";
         string environmentName = Environments.Production;
 #endif
 
@@ -74,7 +72,8 @@ public static class Netzorwright
         PhysicalFileProvider fileProvider;
         if (currentDirectory == null)
         {
-            var path = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), rootPath));
+            var currenDirectoryPath = Directory.GetCurrentDirectory();
+            var path = new PhysicalFileProvider(Path.Combine(currenDirectoryPath));
             //Directory.SetCurrentDirectory(path.Root);
             fileProvider = new PhysicalFileProvider(Path.Combine(path.Root));
         }
@@ -123,6 +122,7 @@ public static class Netzorwright
             var assemblies = new[]
             {
                 typeof(RazorRenderer).Assembly,
+                typeof(T).Assembly,
                 typeof(Microsoft.AspNetCore.Mvc.Razor.RazorPage).Assembly,
                 typeof(Microsoft.AspNetCore.Mvc.Razor.RazorPageBase).Assembly,
                 typeof(Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper).Assembly

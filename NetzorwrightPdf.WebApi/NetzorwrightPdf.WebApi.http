@@ -1,0 +1,10 @@
+@NetzorwrightPdf.WebApi_HostAddress = http://localhost:5037
+
+GET {{NetzorwrightPdf.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+POST {{NetzorwrightPdf.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+Content-Type: application/json

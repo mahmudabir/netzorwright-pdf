@@ -11,7 +11,7 @@ public class Program
         Console.WriteLine("Hello, NetzorwrightPdf!");
 
         var currentDirectory = Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..\\");
-        Netzorwright.Initialize(currentDirectory: currentDirectory);
+        Netzorwright.Initialize<Program>(currentDirectory: currentDirectory);
 
         var shopLogo = "";
         try
