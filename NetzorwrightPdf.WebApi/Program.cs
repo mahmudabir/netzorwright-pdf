@@ -21,7 +21,7 @@ public class Program
         builder.Services.AddSwaggerGen();
 
         var currentDirectory = Path.Combine(Directory.GetCurrentDirectory());
-        Netzorwright.Initialize<Program>();
+        Netzorwright.Initialize(assemblyTypes: typeof(Program));
 
         var app = builder.Build();
 

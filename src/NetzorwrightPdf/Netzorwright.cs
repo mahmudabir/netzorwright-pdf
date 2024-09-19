@@ -32,9 +32,10 @@ public static class Netzorwright
     public static PlaywrightGenerator PlaywrightGenerator { get; set; }
     public static DinkToPdfGenerator DinkToPdfGenerator { get; set; }
 
-    public static void Initialize<T>(bool isHeadless = true, string currentDirectory = null)
+    public static void Initialize(bool isHeadless = true, string currentDirectory = null, params Type[]? assemblyTypes)
     {
-        var serviceProvider = BuildServiceProvider<T>(currentDirectory);
+        assemblyTypes = assemblyTypes ?? [];
+        var serviceProvider = BuildServiceProvider(assemblyTypes, currentDirectory);
 
         _isHeadless = isHeadless;
         DefaultPagePdfOptions = _defaultPagePdfOptions;
@@ -50,7 +51,7 @@ public static class Netzorwright
         Microsoft.Playwright.Program.Main(["install"]);
     }
 
-    public static IServiceProvider BuildServiceProvider<T>(string currentDirectory = null)
+    public static IServiceProvider BuildServiceProvider(Type[] assemblyTypes, string currentDirectory = null)
     {
         IServiceCollection services = new ServiceCollection();
 
@@ -122,11 +123,12 @@ public static class Netzorwright
             var assemblies = new[]
             {
                 typeof(RazorRenderer).Assembly,
-                typeof(T).Assembly,
                 typeof(Microsoft.AspNetCore.Mvc.Razor.RazorPage).Assembly,
                 typeof(Microsoft.AspNetCore.Mvc.Razor.RazorPageBase).Assembly,
                 typeof(Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper).Assembly
             };
+
+            assemblies = assemblies.Concat(assemblyTypes.Select(x => x.Assembly)).ToArray();
 
             foreach (var assembly in assemblies)
             {
