@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\NetzorwrightPdf\NetzorwrightPdf.csproj" />
+    <ProjectReference Include="..\..\src\NetzorwrightPdf\NetzorwrightPdf.csproj" />
   </ItemGroup>
 
   <ItemGroup>

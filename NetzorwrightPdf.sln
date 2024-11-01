@@ -11,13 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{14ABE4A2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetzorwrightPdf.TestConsole", "tests\NetzorwrightPdf.TestConsole\NetzorwrightPdf.TestConsole.csproj", "{C4C3D608-D303-44D7-8F04-8EAE877407DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetzorwrightPdf.WebApi", "tests\NetzorwrightPdf.WebApi\NetzorwrightPdf.WebApi.csproj", "{74A4017C-4DD5-4B5E-AC4F-5F997F6531A8}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5254C83E-A180-4B6C-93BA-8B0E69424AD2}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetzorwrightPdf.WebApi", "NetzorwrightPdf.WebApi\NetzorwrightPdf.WebApi.csproj", "{74A4017C-4DD5-4B5E-AC4F-5F997F6531A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
